@@ -1,0 +1,46 @@
+body,
+html,
+#root {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.audioComponent {
+  display: block;
+  padding: 5px;
+}
+.audioComponent[playing=true] {
+  background-color: red;
+}
+
+#audioGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1vmin;
+}
+
+#drumMachine {
+  max-width: 50vw;
+  max-height: 50vh;
+  background-color: aquamarine;
+}
+
+#background {
+  position: absolute;
+  min-width: 100vw;
+  min-height: 100vh;
+  background-color: lightgreen;
+  z-index: -1;
+  margin: 0;
+  padding: 0;
+}
+
+.square {
+  width: 10vmin;
+  height: 10vmin;
+  overflow: hidden;
+  border-radius: 1vmin;
+}/*# sourceMappingURL=index.css.map */
