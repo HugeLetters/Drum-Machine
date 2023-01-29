@@ -1,16 +1,15 @@
 import audioManifest from './audioManifest.json';
 import React from "react";
 
-class AudioComponent extends React.PureComponent {
+class SoundPad extends React.PureComponent {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = { playing: false, trackLoaded: false };
         this.fetchTrack(this.props.audioSource)
             .then(response => response.arrayBuffer())
-            .then(audioBuffer => { this.decodeTrack(audioBuffer, 0.05) })
+            .then(audioBuffer => { this.decodeTrack(audioBuffer) })
             .catch(error => { console.error(error) });
     }
-
     fetchTrack = (audioSource) => (new Promise((resolve, reject) => {
         fetch(`./audio/${audioSource}`)
             .then(response => {
@@ -20,16 +19,10 @@ class AudioComponent extends React.PureComponent {
             })
             .catch(error => { reject(`Error while fetching ${audioSource}\nError -${error}`) })
     }))
-    decodeTrack = (audioData, volume) => {
-        this.audioContext = new window.AudioContext();
-        this.audioTrack = this.audioContext.createBufferSource();
-        this.audioContext.decodeAudioData(audioData)
+    decodeTrack = (audioData) => {
+        this.props.audioContext.decodeAudioData(audioData)
             .then(buffer => {
-                this.audioTrack.buffer = buffer;
-                this.gainNode = this.audioContext.createGain();
-                this.gainNode.gain.value = volume;
-                this.gainNode.connect(this.audioContext.destination);
-                this.audioTrack.connect(this.gainNode);
+                this.buffer = buffer;
                 this.setState({ trackLoaded: true });
             })
             .catch(e => { console.error(`Error while decoding audio file ${this.props.audioSource}\nError - ${e}`); })
@@ -39,71 +32,77 @@ class AudioComponent extends React.PureComponent {
             console.warn(`${this.props.audioSource} hasn't loaded.`);
             return null;
         };
+        if (!this.props.power) {
+            console.warn(`Power is turned off.`);
+            return null;
+        }
+
+        this.props.handlePlay(this);
 
         clearTimeout(this.playingTimeoutID);
         this.setState({ playing: true });
         this.playingTimeoutID = setTimeout(() => { this.setState({ playing: false }) }, 300);
 
-        const audioTrackInstance = this.audioContext.createBufferSource();
-        audioTrackInstance.buffer = this.audioTrack.buffer;
-        audioTrackInstance.connect(this.gainNode);
+        const audioTrackInstance = this.props.audioContext.createBufferSource();
+        audioTrackInstance.buffer = this.buffer;
+
+        audioTrackInstance.connect(this.props.gainNode);
         audioTrackInstance.start();
     }
-
     render() {
         return <button
-            className="audioComponent square"
+            className="soundPad"
             onClick={this.play}
             {...(this.state.playing ? { playing: "true" } : {})}>
-            {this.props.label || this.props.audioSource.replace("./source/audio/", "")}
+            {this.props.label || this.props.audioSource}
         </button>
     }
 }
 
-class AudioGrid extends React.Component {
+export default class SoundPadGrid extends React.Component {
     constructor(props) {
         super(props);
-        this.audioGridRef = React.createRef();
-        this.state = { mode: "default" };
         this.keyMap = {};
-        this.audioModes = {};
-        audioManifest.modes.forEach(mode => { this.audioModes[mode] = audioManifest[mode] })
         this.keyList = ["KeyQ", "KeyW", "KeyE", "KeyA", "KeyS", "KeyD", "KeyZ", "KeyX", "KeyC"]
         this.keyList.forEach(e => { this.keyMap[e] = React.createRef() });
     }
+    playAudio = ({ code: keyCode }) => this.keyMap[keyCode]?.current.play();
     componentDidMount() {
-        window.addEventListener("keydown", (e) => {
-            this.keyMap[e.code]?.current.play();
-        });
+        window.addEventListener("keydown", this.playAudio);
     }
-    fetchAudioFiles = (mode) => this.audioModes[mode] ?? this.audioModes.default
+    componentWillUnmount() {
+        window.removeEventListener("keydown", this.playAudio);
+    }
+    handlePlay = (audioNode) => {
+        Object.entries(this.keyMap).some(key => {
+            if (key[1].current === audioNode) {
+                this.props.handlePlay({
+                    filename: audioNode.props.audioSource,
+                    buffer: audioNode.buffer,
+                    key: key[0].replace(/key/ig, "")
+                });
+                return true;
+            }
+            return false;
+        })
+    }
+    fetchAudioFiles = (preset) => audioManifest[preset]?.map(x => `${preset}/${x}`) ??
+        audioManifest.default?.map(x => `default/${x}`) ?? [];
     render() {
-        return <div id="audioGrid" ref={this.audioGridRef}>
-            {this.fetchAudioFiles(this.state.mode).map((x, i) => {
+        return <div id="soundPadGrid">
+            {this.fetchAudioFiles(this.props.audio.preset).map((x, i) => {
                 const KBkey = this.keyList[i];
-                return <AudioComponent
+                return <SoundPad
                     key={x}
                     ref={this.keyMap[KBkey]}
-                    audioSource={`/${this.state.mode}/${x}`}
+                    audioSource={x}
                     label={KBkey}
+                    power={this.props.audio.power}
+                    audioContext={this.props.audio.context}
+                    gainNode={this.props.audio.node}
+                    handlePlay={this.handlePlay}
                 />
             })}
         </div>
-    }
-}
-
-class SettingsPanel extends React.Component {
-    render() { return <i style={{ fontWeight: 500 }} className="fa fa-github"></i> }
-}
-
-export class DrumMachine extends React.Component {
-    render() {
-        return <div id="drumMachine"><AudioGrid /><SettingsPanel /></div>
-    }
-}
-
-export class Background extends React.Component {
-    render() {
-        return <div id="background"></div>
     }
 }
