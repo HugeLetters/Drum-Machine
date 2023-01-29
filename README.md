@@ -8,7 +8,7 @@ In the project directory, you can run:
 
 ### `npm run setAudio`
 
-Produces an `audioManifest.json` based on which audio files are put into public/audio/\[mode\] folder.\
+Produces an `audioManifest.json` based on which audio files are put into public/audio/\[preset\] folder.\
 Then the app uses this manifest to fetch individual files. 
 
 ### `npm start`
