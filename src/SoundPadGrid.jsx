@@ -1,24 +1,23 @@
 import audioManifest from './audioManifest.json';
 import React from "react";
-
 class SoundPad extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = { playing: false, trackLoaded: false };
-        this.fetchTrack(this.props.audioSource)
-            .then(response => response.arrayBuffer())
-            .then(audioBuffer => { this.decodeTrack(audioBuffer) })
-            .catch(error => { console.error(error) });
     }
-    fetchTrack = (audioSource) => (new Promise((resolve, reject) => {
-        fetch(`./audio/${audioSource}`)
-            .then(response => {
-                response.ok
-                    ? resolve(response)
-                    : reject(`Couldn't load track ${audioSource}\nStatus code - ${response.status}, Error - ${response.statusText}`)
-            })
-            .catch(error => { reject(`Error while fetching ${audioSource}\nError -${error}`) })
-    }))
+    componentDidMount() {
+        this.fetchAudioWorker = new SharedWorker(new URL("./fetchAudioWorker.js", import.meta.url));
+        this.fetchAudioWorker.port.start();
+        this.fetchAudioWorker.port.postMessage(this.props.audioSource);
+        this.fetchAudioWorker.port.onmessage = (message) => {
+            message.data instanceof ArrayBuffer
+                ? this.decodeTrack(message.data)
+                : console.error(message.data);
+        }
+    }
+    componentWillUnmount() {
+        this.fetchAudioWorker.port.close();
+    }
     decodeTrack = (audioData) => {
         this.props.audioContext.decodeAudioData(audioData)
             .then(buffer => {
@@ -66,7 +65,9 @@ export default class SoundPadGrid extends React.Component {
         this.keyList = ["KeyQ", "KeyW", "KeyE", "KeyA", "KeyS", "KeyD", "KeyZ", "KeyX", "KeyC"]
         this.keyList.forEach(e => { this.keyMap[e] = React.createRef() });
     }
-    playAudio = ({ code: keyCode }) => this.keyMap[keyCode]?.current.play();
+    playAudio = ({ code: keyCode }) => {
+        this.keyMap[keyCode]?.current.play();
+    }
     componentDidMount() {
         window.addEventListener("keydown", this.playAudio);
     }
@@ -96,7 +97,7 @@ export default class SoundPadGrid extends React.Component {
                     key={x}
                     ref={this.keyMap[KBkey]}
                     audioSource={x}
-                    label={KBkey}
+                    label={KBkey.replace(/key/ig, "")}
                     power={this.props.audio.power}
                     audioContext={this.props.audio.context}
                     gainNode={this.props.audio.node}

@@ -1,12 +1,28 @@
+@charset "UTF-8";
+@font-face {
+  font-family: VT323;
+  src: url(../public/fonts/VT323-Regular.ttf);
+}
 .soundPad {
-  width: 5rem;
-  height: 5rem;
+  font-size: 1.5rem;
+  font-weight: 1000;
+  width: 12vmin;
+  height: 12vmin;
   overflow: hidden;
-  border-radius: 0.5rem;
-  display: block;
+  border-top: hsl(0deg, 0%, 55%) solid 0.5rem;
+  border-bottom: hsl(0deg, 0%, 55%) solid 0.5rem;
+  border-left: hsl(0deg, 0%, 85%) solid 0.5rem;
+  border-right: hsl(0deg, 0%, 85%) solid 0.5rem;
+  box-shadow: 0 0 1rem black;
+  cursor: pointer;
 }
 .soundPad[playing=true] {
-  background-color: red;
+  filter: brightness(70%);
+  border-top: hsl(0deg, 0%, 45%) solid 0.5rem;
+  border-bottom: hsl(0deg, 0%, 45%) solid 0.5rem;
+  border-left: hsl(0deg, 0%, 75%) solid 0.5rem;
+  border-right: hsl(0deg, 0%, 75%) solid 0.5rem;
+  box-shadow: none;
 }
 
 #soundPadGrid {
@@ -16,11 +32,19 @@
   grid-template-columns: 1fr 1fr 1fr;
   gap: 1vmin;
   margin: 1vmin;
+  padding: 1vmin;
 }
 
 #settingsPanel {
   margin: 1rem;
-  width: 200px;
+  padding: 0.5rem;
+  border-top: hsl(0deg, 0%, 55%) solid 5px;
+  border-bottom: hsl(0deg, 0%, 55%) solid 5px;
+  border-left: hsl(0deg, 0%, 85%) solid 5px;
+  border-right: hsl(0deg, 0%, 85%) solid 5px;
+  box-shadow: 0 0 1rem black;
+  width: 30%;
+  font-weight: 700;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -30,11 +54,12 @@
   margin: 0.5rem;
 }
 #settingsPanel #powerSwitch {
-  width: 70%;
-  height: 25%;
+  width: 50%;
+  height: 20%;
   display: flex;
   flex-flow: column;
   align-items: center;
+  cursor: pointer;
 }
 #settingsPanel #powerSwitch > input[type=checkbox] {
   width: 0;
@@ -71,9 +96,10 @@
   flex-direction: column;
   align-items: center;
   width: 50%;
-  min-height: 25%;
+  height: 15%;
 }
 #settingsPanel #volumeSlider > input[type=range] {
+  width: 100%;
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
@@ -86,85 +112,240 @@
   display: block;
   height: 100%;
   outline: none;
+  background-color: hsl(0deg, 0%, 45%);
+  cursor: pointer;
 }
 #settingsPanel #volumeSlider > input[type=range]::-webkit-slider-thumb {
   -webkit-appearance: none;
           appearance: none;
   height: 400%;
   width: 3%;
-  background-color: red;
+  background-color: hsl(0deg, 0%, 85%);
   cursor: pointer;
   transform: translateY(-37.5%);
 }
 #settingsPanel #presetMenu {
   display: flex;
   flex-direction: column;
+  text-align: center;
+  width: 70%;
+}
+#settingsPanel #presetMenu > select {
+  font-size: 1rem;
+  font-family: VT323;
+  background-color: hsl(240deg, 100%, 55%);
+  color: white;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  border-top: hsl(0deg, 0%, 45%) solid 0.5rem;
+  border-bottom: hsl(0deg, 0%, 45%) solid 0.5rem;
+  border-left: hsl(0deg, 0%, 75%) solid 0.5rem;
+  border-right: hsl(0deg, 0%, 75%) solid 0.5rem;
+  box-shadow: none;
+  outline: none;
+}
+#settingsPanel #presetMenu > select > option {
+  background-color: blue;
 }
 #settingsPanel #display {
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.5rem;
+  font-weight: 500;
+  padding: 0.5rem;
+  width: 60%;
   font-family: VT323;
-  outline: 1px solid black;
-  width: 100%;
-  height: 20%;
-  background-color: blue;
+  background-color: hsl(240deg, 100%, 55%);
   color: white;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  border-top: hsl(0deg, 0%, 45%) solid 0.5rem;
+  border-bottom: hsl(0deg, 0%, 45%) solid 0.5rem;
+  border-left: hsl(0deg, 0%, 75%) solid 0.5rem;
+  border-right: hsl(0deg, 0%, 75%) solid 0.5rem;
+  box-shadow: none;
+  box-shadow: 0 0 0.5rem black inset;
   overflow: hidden;
   white-space: nowrap;
 }
 
-@font-face {
-  font-family: VT323;
-  src: url(../public/fonts/VT323-Regular.ttf);
-}
 #recorder {
-  flex-basis: 100%;
   display: flex;
+  justify-content: center;
 }
 #recorder #timeline {
-  flex-basis: 100%;
+  display: grid;
+  grid-template-columns: 1fr 9fr;
+  margin: 0 1rem;
+  font-family: VT323;
+  background-color: hsl(240deg, 100%, 55%);
+  color: white;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  border-top: hsl(0deg, 0%, 45%) solid 1rem;
+  border-bottom: hsl(0deg, 0%, 45%) solid 1rem;
+  border-left: hsl(0deg, 0%, 75%) solid 1rem;
+  border-right: hsl(0deg, 0%, 75%) solid 1rem;
+  box-shadow: none;
   position: relative;
 }
-#recorder #timeline #timelinePosition {
-  height: calc(100% + 2vmin);
-  width: 0.5vmin;
-  background-color: black;
-  position: absolute;
-  top: -1vmin;
-  z-index: 999;
+#recorder #timeline #timelineLabels {
+  display: grid;
+  grid-template-columns: 1fr;
+  position: relative;
 }
-#recorder #timeline .timelineRow {
+#recorder #timeline #timelineLabels::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  box-shadow: inset 0 0 1rem black;
+  z-index: 1;
+}
+#recorder #timeline #timelineLabels::after {
+  z-index: 999;
+  content: "";
+  position: absolute;
+  left: 100%;
+  height: 100%;
+  width: 0.4vmin;
+  background-color: black;
+  box-shadow: -0.2rem 0 0.05rem hsla(0deg, 0%, 0%, 0.3);
+}
+#recorder #timeline #timelineLabels .timelineRowLabel {
+  padding: 0.1rem 1rem 0.1rem 1rem;
+}
+#recorder #timeline #timelineLabels .timelineRowLabel[isсurrent=true] {
+  font-family: VT323;
+  background-color: white;
+  color: hsl(240deg, 100%, 55%);
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+#recorder #timeline #timelineRows {
+  display: grid;
+  grid-template-columns: 1fr;
+  position: relative;
+  z-index: 2;
+}
+#recorder #timeline #timelineRows #timelineRowsMask {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  box-shadow: inset 0 0 1rem black;
+  cursor: pointer;
+  z-index: 1;
+}
+#recorder #timeline #timelineRows #timelinePosition {
+  height: 100%;
+  width: 0.2rem;
+  background: black;
+  position: absolute;
+  cursor: pointer;
+  z-index: 999;
+  box-shadow: -0.2rem 0 0.05rem hsla(0deg, 0%, 0%, 0.3);
+}
+#recorder #timeline #timelineRows .timelineRow {
+  position: relative;
   display: flex;
   align-items: center;
-  height: 1.5rem;
 }
-#recorder #timeline .timelineRow .timestamp {
+#recorder #timeline #timelineRows .timelineRow[isсurrent=true] {
+  font-family: VT323;
+  background-color: white;
+  color: hsl(240deg, 100%, 55%);
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+#recorder #timeline #timelineRows .timelineRow[isсurrent=true] .timestamp {
+  outline: 1px solid hsl(240deg, 100%, 55%);
+}
+#recorder #timeline #timelineRows .timelineRow[isсurrent=true] .timestamp:hover {
+  font-family: VT323;
+  background-color: hsl(240deg, 100%, 55%);
+  color: white;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+#recorder #timeline #timelineRows .timelineRow .timestamp {
   position: absolute;
-  outline: 1px solid black;
-  width: 1.5rem;
-  height: 1.5rem;
+  outline: 1px solid white;
+  width: 1.2rem;
+  height: 1.2rem;
   overflow: hidden;
-  border-radius: 0.15rem;
   display: flex;
   align-items: center;
   justify-content: center;
   transform: translateX(-50%);
+  cursor: url(../public/cursor/trashcan.cur), auto;
+  z-index: 90;
 }
-#recorder #timeline .timelineRow .timestamp:hover {
+#recorder #timeline #timelineRows .timelineRow .timestamp:hover {
+  font-family: VT323;
   background-color: white;
+  color: hsl(240deg, 100%, 55%);
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
   z-index: 900;
 }
 #recorder #recorderControls {
   display: grid;
   grid-template-columns: 1fr;
+  gap: 0.3rem;
+  padding: 0.4rem;
+  border-top: hsl(0deg, 0%, 55%) solid 0.3rem;
+  border-bottom: hsl(0deg, 0%, 55%) solid 0.3rem;
+  border-left: hsl(0deg, 0%, 85%) solid 0.3rem;
+  border-right: hsl(0deg, 0%, 85%) solid 0.3rem;
+  box-shadow: 0 0 1rem black;
 }
 #recorder #recorderControls button {
   background-color: white;
+  border-top: hsl(0deg, 0%, 55%) solid 0.3rem;
+  border-bottom: hsl(0deg, 0%, 55%) solid 0.3rem;
+  border-left: hsl(0deg, 0%, 85%) solid 0.3rem;
+  border-right: hsl(0deg, 0%, 85%) solid 0.3rem;
+  box-shadow: 0 0 1rem black;
+  cursor: pointer;
 }
-#recorder #recorderControls button[status=false] {
-  background-color: gray;
+#recorder #recorderControls button[pressed=true] {
+  filter: brightness(70%);
+  border-top: hsl(0deg, 0%, 45%) solid 0.3rem;
+  border-bottom: hsl(0deg, 0%, 45%) solid 0.3rem;
+  border-left: hsl(0deg, 0%, 75%) solid 0.3rem;
+  border-right: hsl(0deg, 0%, 75%) solid 0.3rem;
+  box-shadow: none;
+}
+
+#background {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  margin: 0;
+  padding: 0;
+  background: url(../public/image/background.jpg);
+  background-size: cover;
+}
+
+:root {
+  font-size: 2vmin;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 html,
@@ -183,19 +364,19 @@ body,
 
 #drumMachine {
   max-width: 90vw;
-  max-height: 90vh;
-  background-color: aquamarine;
+  padding: 1rem;
+  background-color: hsl(0deg, 0%, 65%);
+  display: grid;
+  justify-items: center;
+  border-top: hsl(0deg, 0%, 55%) solid 1rem;
+  border-bottom: hsl(0deg, 0%, 55%) solid 1rem;
+  border-left: hsl(0deg, 0%, 85%) solid 1rem;
+  border-right: hsl(0deg, 0%, 85%) solid 1rem;
+  box-shadow: 0 0 1rem black;
+}
+#drumMachine #bottomContainer {
+  width: 100%;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
-}
-
-#background {
-  position: absolute;
-  min-width: 100vw;
-  min-height: 100vh;
-  background-color: lightgreen;
-  z-index: -1;
-  margin: 0;
-  padding: 0;
 }/*# sourceMappingURL=index.css.map */
