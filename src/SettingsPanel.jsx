@@ -1,5 +1,4 @@
 import React from "react";
-import { setColorPalette } from "./utils";
 
 export default class SettingsPanel extends React.Component {
     handleSwitch = (power) => {
@@ -98,7 +97,6 @@ class VolumeSlider extends React.Component {
 class PresetSwitch extends React.Component {
     constructor(props) {
         super(props);
-        this.colors = setColorPalette(this.props.presets);
         this.state = { preset: this.props.presets[0] };
         this.props.handlePreset(this.state.preset);
     }
@@ -108,7 +106,7 @@ class PresetSwitch extends React.Component {
         return <label id="presetMenu">PRESET
             <select onChange={this.handleChange} onKeyDown={this.preventAlphaKeys} defaultValue={this.state.preset}>
                 {this.props.presets.map((preset, i) =>
-                    <option key={preset} style={{ backgroundColor: `hsl(${this.colors[i]},100%,50%)` }}>{preset}</option>)}
+                    <option key={preset}>{preset}</option>)}
             </select>
         </label>
     }

@@ -1,3 +1,3 @@
-export function setColorPalette(list) {
-    return list.map((_, i) =>( i * 360 / list.length).toFixed())
+export function randomInt(min = 0, max = 100) {
+    return Math.floor((max - min + 1) * Math.random()) + min;
 }
