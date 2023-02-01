@@ -116,7 +116,7 @@ class TimeLine extends React.Component {
             })
         })
         if (!offsetBuffers.length) return;
-        const offlineContext = new OfflineAudioContext(2, trackLength, sampleRate);
+        const offlineContext = new OfflineAudioContext(1, trackLength, sampleRate);
         offsetBuffers.forEach(buffer => {
             const bufferSource = offlineContext.createBufferSource();
             bufferSource.buffer = buffer;
